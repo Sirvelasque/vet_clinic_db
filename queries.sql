@@ -42,6 +42,7 @@ SELECT * FROM animals;
 SELECT COUNT(*) FROM animals;
 SELECT COUNT(*) FROM animals WHERE escape_attempts=0;
 SELECT AVG(weight_kg) FROM animals;
+-- show which group has attempt to scape the most between neutered AND NOT neutered
 SELECT * FROM(
   SELECT neutered AS n, SUM(escape_attempts) AS scapes
   FROM animals
@@ -55,5 +56,14 @@ WHERE scapes = (
   GROUP BY neutered
 ) as b
 );
+
 SELECT species, MIN(weight_kg) as "Minimum Weight", MAX(weight_kg) as "Maximum Weight" FROM animals GROUP BY species;
 SELECT species, AVG(escape_attempts) as "AVERAGE ESCAPE ATTEMPTS" from animals WHERE date_of_birth BETWEEN '1990-01-01' and '2000-01-01' GROUP BY species;
+
+SELECT * FROM animals LEFT JOIN owners ON animals.owner_id = owners.id WHERE full_name = 'Melody Pond';
+SELECT * FROM animals LEFT JOIN species ON animals.species_id = species.id WHERE species.name = 'Pokemon';
+SELECT owners.full_name, animals.name FROM owners LEFT JOIN animals ON owners.id=animals.owner_id ORDER BY full_name;
+SELECT species.name, COUNT(animals.name) AS count FROM animals INNER JOIN species ON animals.species_id = species.id GROUP BY species.id ORDER BY count DESC;
+SELECT animals.name FROM animals INNER JOIN owners ON animals.owner_id = owners.id INNER JOIN species ON animals.species_id = species.id WHERE species.name='Digimon' AND owners.full_name='Jennifer Orwell' ORDER BY animals.name;
+SELECT animals.name FROM animals INNER JOIN owners ON animals.owner_id = owners.id WHERE owners.full_name='Dean Winchester' AND escape_attempts=0 ORDER BY animals.name;
+SELECT owners.full_name, COUNT(animals.name) AS count FROM animals INNER JOIN owners ON animals.owner_id = owners.id GROUP BY owners.full_name ORDER BY count DESC LIMIT 1;
